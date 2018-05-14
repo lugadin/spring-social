@@ -76,7 +76,7 @@ public class JdbcUsersConnectionRepository implements UsersConnectionRepository 
 	
 	public List<String> findUserIdsWithConnection(Connection<?> connection) {
 		ConnectionKey key = connection.getKey();
-		List<String> localUserIds = jdbcTemplate.queryForList("select userId from " + tablePrefix + "UserConnection where providerId = ? and providerUserId = ?", String.class, key.getProviderId(), key.getProviderUserId());		
+		List<String> localUserIds = jdbcTemplate.queryForList("select user_id from " + tablePrefix + "user_connection where provider_id = ? and provider_user_id = ?", String.class, key.getProviderId(), key.getProviderUserId());		
 		if (localUserIds.size() == 0 && connectionSignUp != null) {
 			String newUserId = connectionSignUp.execute(connection);
 			if (newUserId != null)
@@ -93,11 +93,11 @@ public class JdbcUsersConnectionRepository implements UsersConnectionRepository 
 		parameters.addValue("providerId", providerId);
 		parameters.addValue("providerUserIds", providerUserIds);
 		final Set<String> localUserIds = new HashSet<String>();
-		return new NamedParameterJdbcTemplate(jdbcTemplate).query("select userId from " + tablePrefix + "UserConnection where providerId = :providerId and providerUserId in (:providerUserIds)", parameters,
+		return new NamedParameterJdbcTemplate(jdbcTemplate).query("select user_id from " + tablePrefix + "user_connection where provider_id = :providerId and provider_user_id in (:providerUserIds)", parameters,
 			new ResultSetExtractor<Set<String>>() {
 				public Set<String> extractData(ResultSet rs) throws SQLException, DataAccessException {
 					while (rs.next()) {
-						localUserIds.add(rs.getString("userId"));
+						localUserIds.add(rs.getString("user_id"));
 					}
 					return localUserIds;
 				}

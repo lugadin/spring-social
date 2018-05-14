@@ -11,3 +11,4 @@ exploration
 *.ipr
 *.iws
 .idea
+/.nb-gradle/
